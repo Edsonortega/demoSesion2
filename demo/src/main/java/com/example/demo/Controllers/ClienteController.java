@@ -55,12 +55,19 @@ public class ClienteController {
     }
 
     @PutMapping("/{clienteId}")
-    public ResponseEntity<String> editCliente(@PathVariable Long clienteId){
+    public ResponseEntity<String> editCliente(@PathVariable Long clienteId, @RequestBody Cliente updatedClient){
         // Verificar si el cliente existe
         if (!clienteRepository.existsById(clienteId)) {
             return ResponseEntity.notFound().build();
         }
-        clienteRepository.
+        Cliente existingClient = clienteRepository.findById(clienteId).get();
+        existingClient.setName(updatedClient.getName());
+        existingClient.setLastName(updatedClient.getLastName());
+        existingClient.setBornDate(updatedClient.getBornDate());
+        existingClient.setEmail(updatedClient.getEmail());
+
+        clienteRepository.save(existingClient);
+        return ResponseEntity.ok("Cliente actualizado correctamente");
     }
 }
 
